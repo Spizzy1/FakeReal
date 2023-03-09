@@ -154,6 +154,8 @@ int main()
     cout << "out ";
     SetConsoleTextAttribute(hConsole, 10);
     cout << "to compile message into or out of fakereal\n";
+    SetConsoleTextAttribute(hConsole, 8);
+    cout << "psst! Say 'in number' or 'out number' to compile to numbers!!\n";
     SetConsoleTextAttribute(hConsole, 10);
     std::cout << "command: ";
     SetConsoleTextAttribute(hConsole, 15);
@@ -176,9 +178,34 @@ int main()
         cout << "Input to decode: ";
         SetConsoleTextAttribute(hConsole, 15);
         std::getline(std::cin, decode);
+        SetConsoleTextAttribute(hConsole, 10);
         std::cout << endl << "Output: ";
         SetConsoleTextAttribute(hConsole, 15);
         cout << CompileFrom(decode) << endl;
+        if (again()) { goto start; }
+    }
+    else if (value == "in number") {
+        string encode;
+        SetConsoleTextAttribute(hConsole, 10);
+        cout << "Input to encode: ";
+        SetConsoleTextAttribute(hConsole, 15);
+        std::getline(std::cin, encode);
+        SetConsoleTextAttribute(hConsole, 10);
+        std::cout << endl << "Output: ";
+        SetConsoleTextAttribute(hConsole, 15);
+        cout << intToFake(stoi(encode)) << endl;
+        if (again()) { goto start; }
+    }
+    else if (value == "out number") {
+        string decode;
+        SetConsoleTextAttribute(hConsole, 10);
+        cout << "Input to decode: ";
+        SetConsoleTextAttribute(hConsole, 15);
+        std::getline(std::cin, decode);
+        SetConsoleTextAttribute(hConsole, 10);
+        std::cout << endl << "Output: ";
+        SetConsoleTextAttribute(hConsole, 15);
+        cout << fakeToInt(decode) << endl;
         if (again()) { goto start; }
     }
     else {
