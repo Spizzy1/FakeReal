@@ -106,14 +106,22 @@ string CompileTo(string input) {
     }
     return finalString;
 }
-string CompileFrom(string input) {
+string CompileFrom(string input, bool autoAscii) {
     string finalString = "";
     vector<string> words = split(input, "not");
     for (int i = 0; i < words.size(); i++) {
         vector<string> letters = split(words[i], "yes");
         for (int j = 0; j < letters.size(); j++) {
             if (letters[j] != "") {
-                finalString += intToLetter(fakeToInt(letters[j]));
+                if (intToLetter(fakeToInt(letters[j])) == ',' && autoAscii) {
+                    finalString += '1';
+                }
+                else if (intToLetter(fakeToInt(letters[j])) == '-'&& autoAscii) {
+                    finalString += '0';
+                }
+                else {
+                    finalString += intToLetter(fakeToInt(letters[j]));
+                }
             }
         }
         if (i + 1 != words.size()) {
@@ -139,7 +147,15 @@ bool again() {
 int main()
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    bool autoAscii = false;
     start:
+    string offOn = "";
+    if (autoAscii) {
+        offOn = "ON";
+    }
+    else {
+        offOn = "OFF";
+    }
     system("CLS");
     cout << flush;
     SetConsoleTextAttribute(hConsole, 10);
@@ -156,6 +172,7 @@ int main()
     cout << "to compile message into or out of fakereal\n";
     SetConsoleTextAttribute(hConsole, 8);
     cout << "psst! Say 'in number' or 'out number' to compile to numbers!!\n";
+    cout << "Automatic conversion back to binary is: " + offOn + "\n" + "Type on or off to turn it on/off" + "\n";
     SetConsoleTextAttribute(hConsole, 10);
     std::cout << "command: ";
     SetConsoleTextAttribute(hConsole, 15);
@@ -181,7 +198,7 @@ int main()
         SetConsoleTextAttribute(hConsole, 10);
         std::cout << endl << "Output: ";
         SetConsoleTextAttribute(hConsole, 15);
-        cout << CompileFrom(decode) << endl;
+        cout << CompileFrom(decode, autoAscii) << endl;
         if (again()) { goto start; }
     }
     else if (value == "in number") {
@@ -207,6 +224,16 @@ int main()
         SetConsoleTextAttribute(hConsole, 15);
         cout << fakeToInt(decode) << endl;
         if (again()) { goto start; }
+    }
+    else if (value == "on") {
+        autoAscii = true;
+        goto start;
+
+    }
+    else if (value == "off") {
+        autoAscii = false;
+        goto start;
+
     }
     else {
         cout << "WRONG COMMAND";
